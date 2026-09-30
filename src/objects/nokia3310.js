@@ -251,17 +251,26 @@ function buildNokia() {
 // Drop the glTF export into models/nokia3310/. Falls back to the procedural phone if missing.
 // ---------------------------------------------------------------------------
 
-const MODEL_URL = 'models/nokia3310/scene.gltf';
+const MODEL_URL = 'models/nokia3310/nokia_3310.glb';
 const MODEL_FIX = {
   rotation: [0, 0, 0],       // Euler (rad) to get portrait: top = +y, face = +z
   length: 11.3,              // real 3310 length in cm
   screenMatch: /screen|display|lcd|glass/i, // mesh/material name of the display
+  // Per-material tweaks (by glTF material name) so it sits well in this lighting.
+  materials: {
+    Base: { roughness: 0.5 },
+    Trim: { metalness: 0.75, roughness: 0.3 },
+    Buttons: { roughness: 0.45 },
+  },
 };
 
 let modelScene = null;
 try {
   const head = await fetch(MODEL_URL, { method: 'HEAD' });
   if (head.ok) modelScene = (await new GLTFLoader().loadAsync(MODEL_URL)).scene;
+  modelScene?.traverse((o) => {
+    if (o.isMesh) Object.assign(o.material, MODEL_FIX.materials[o.material.name] || {});
+  });
 } catch (e) {
   console.warn('Nokia model not loaded, using procedural phone.', e);
 }

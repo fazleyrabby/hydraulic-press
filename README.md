@@ -60,6 +60,10 @@ Then register it in `src/objects/index.js`. `ctx` gives you `fx` (sparks/smoke/d
 
 A GLB model also works. Load it with `GLTFLoader` beforehand and return the scene from `build()`. That's where Blender could come in later, if you want a higher-detail model.
 
+## Credits
+
+- Nokia 3310 model: ["Nokia 3310"](https://sketchfab.com/3d-models/nokia-3310-67ce77f111394e738ba1be94c146ef29) by [Artemecia](https://sketchfab.com/Artemecia), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Rescaled, with material tweaks and a pixel LCD overlay. If `models/nokia3310/nokia_3310.glb` is missing, the app falls back to a procedural phone.
+
 ## Files
 
 - `src/main.js`: renderer, camera, lights, UI and the main loop
