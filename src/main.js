@@ -14,6 +14,7 @@ import { Debris } from './fx/debris.js';
 import { SoundEngine } from './fx/audio.js';
 import { Gauge } from './ui/gauge.js';
 import { OBJECTS } from './objects/index.js';
+import { initVisitorCounter } from './ui/visitorCounter.js';
 
 // ---------------------------------------------------------------------------
 // Renderer / scene
@@ -180,6 +181,7 @@ resize();
 
 capInput.dispatchEvent(new Event('input'));
 setup();
+void initVisitorCounter();
 
 // ---------------------------------------------------------------------------
 // Loop
@@ -223,4 +225,4 @@ function frame(now) {
 requestAnimationFrame(frame);
 
 // handy for debugging from the console
-Object.assign(window, { THREE, scene, ctx, camera, controls, renderer });
+Object.assign(window, { THREE, scene, ctx, camera, controls, renderer, composer });
