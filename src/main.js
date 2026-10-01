@@ -151,6 +151,18 @@ function setup() {
   ctx.setStatus('READY', `${def.name} vs ${capInput.value} t press`);
 }
 
+// Collapsible settings panel: starts collapsed on phones so the scene stays visible.
+const panel = $('panel'), panelToggle = $('panelToggle');
+const mobile = matchMedia('(max-width: 640px)');
+function setPanel(open) {
+  panel.classList.toggle('collapsed', !open);
+  panelToggle.setAttribute('aria-expanded', String(open));
+  panelToggle.setAttribute('aria-label', open ? 'Hide settings' : 'Show settings');
+}
+panelToggle.addEventListener('click', () => setPanel(panel.classList.contains('collapsed')));
+mobile.addEventListener('change', (e) => setPanel(!e.matches));
+setPanel(!mobile.matches);
+
 objSelect.addEventListener('change', setup);
 capInput.addEventListener('input', () => {
   $('capVal').textContent = `${capInput.value} t`;
@@ -208,8 +220,12 @@ function frame(now) {
 
   if (cam.auto) {
     const p = CAMS[cam.preset], k = 1 - Math.exp(-realDt * 1.4);
-    camera.position.lerp(camPos.fromArray(p.pos), k);
-    controls.target.lerp(camTarget.fromArray(p.target), k);
+    // Pull the camera back on narrow (portrait) screens so the press still fits.
+    const pull = THREE.MathUtils.clamp(0.85 / camera.aspect, 1, 2.2);
+    camTarget.fromArray(p.target);
+    camPos.fromArray(p.pos).sub(camTarget).multiplyScalar(pull).add(camTarget);
+    camera.position.lerp(camPos, k);
+    controls.target.lerp(camTarget, k);
   }
   controls.update();
 
