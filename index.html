@@ -26,10 +26,6 @@
     </div>
 
     <div id="panelBody">
-    <label class="field">
-      <span>Object under press</span>
-      <select id="object"></select>
-    </label>
     <div id="objInfo"></div>
 
     <label class="field">
@@ -53,6 +49,11 @@
       <button id="reset">RESET <kbd>R</kbd></button>
     </div>
   </div>
+
+  <nav id="picker" aria-label="Object to crush">
+    <div class="picker-label">CHOOSE WHAT TO CRUSH <span>keys 1–5</span></div>
+    <div id="pickerList" role="radiogroup"></div>
+  </nav>
 
   <div id="status"><div class="head">READY</div><div class="sub">Pick an object and hit PRESS</div></div>
 

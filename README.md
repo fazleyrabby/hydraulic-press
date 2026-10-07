@@ -12,7 +12,7 @@ python3 -m http.server 8321
 
 Then open http://localhost:8321 (or `?object=sodaCan` to preselect an object).
 
-Controls: **Space** press · **R** reset · drag to orbit. Use the capacity slider to change the press's tonnage.
+Controls: pick an object from the strip along the bottom (or keys **1–5**, **←/→**) · **Space** press · **R** reset · drag to orbit. Use the capacity slider to change the press's tonnage.
 
 ## How it decides what happens
 

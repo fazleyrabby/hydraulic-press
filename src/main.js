@@ -116,11 +116,31 @@ debris.groundAt = ctx.groundAt;
 // ---------------------------------------------------------------------------
 
 const $ = (id) => document.getElementById(id);
-const objSelect = $('object'), capInput = $('capacity'), tsInput = $('timescale');
+const capInput = $('capacity'), tsInput = $('timescale');
 
-for (const o of OBJECTS) objSelect.add(new Option(o.name, o.id));
+// Object picker: always-visible chips along the bottom, plus number keys and ←/→.
 const params = new URLSearchParams(location.search);
-if (params.get('object')) objSelect.value = params.get('object');
+let currentId = OBJECTS.some((o) => o.id === params.get('object')) ? params.get('object') : OBJECTS[0].id;
+const pickerList = $('pickerList');
+OBJECTS.forEach((o, i) => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.setAttribute('role', 'radio');
+  b.dataset.id = o.id;
+  b.innerHTML = `<kbd>${i + 1}</kbd><span class="swatch ${o.material.behavior}"></span>`;
+  b.append(o.name);
+  b.addEventListener('click', () => selectObject(o.id));
+  pickerList.append(b);
+});
+function selectObject(id) {
+  currentId = id;
+  for (const b of pickerList.children) {
+    const on = b.dataset.id === id;
+    b.setAttribute('aria-checked', String(on));
+    if (on) b.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+  setup();
+}
 
 function describe(subject) {
   const req = subject.requiredForce;
@@ -130,7 +150,7 @@ function describe(subject) {
 
 let sim;
 function setup() {
-  const def = OBJECTS.find((o) => o.id === objSelect.value) || OBJECTS[0];
+  const def = OBJECTS.find((o) => o.id === currentId) || OBJECTS[0];
   if (ctx.press) scene.remove(ctx.press.group);
   if (ctx.subject) ctx.subject.root.removeFromParent();
   debris.clear();
@@ -163,7 +183,6 @@ panelToggle.addEventListener('click', () => setPanel(panel.classList.contains('c
 mobile.addEventListener('change', (e) => setPanel(!e.matches));
 setPanel(!mobile.matches);
 
-objSelect.addEventListener('change', setup);
 capInput.addEventListener('input', () => {
   $('capVal').textContent = `${capInput.value} t`;
   gauge.setCapacity(+capInput.value);
@@ -178,6 +197,12 @@ controls.addEventListener('start', () => { cam.auto = false; $('autocam').checke
 addEventListener('keydown', (e) => {
   if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
   if (e.code === 'Space') { e.preventDefault(); sim.start(); }
+  const n = /^(?:Digit|Numpad)([1-9])$/.exec(e.code)?.[1];
+  if (n && OBJECTS[n - 1]) selectObject(OBJECTS[n - 1].id);
+  if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
+    const i = OBJECTS.findIndex((o) => o.id === currentId) + (e.code === 'ArrowRight' ? 1 : -1);
+    selectObject(OBJECTS[(i + OBJECTS.length) % OBJECTS.length].id);
+  }
   if (e.code === 'KeyR') setup();
 });
 
@@ -192,7 +217,7 @@ addEventListener('resize', resize);
 resize();
 
 capInput.dispatchEvent(new Event('input'));
-setup();
+selectObject(currentId);
 void initVisitorCounter();
 
 // ---------------------------------------------------------------------------

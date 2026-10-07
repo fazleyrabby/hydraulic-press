@@ -59,6 +59,27 @@ kbd { font-size: 9px; font-weight: 600; opacity: .6; margin-left: 4px; font-fami
 #visitors .dot { width: 7px; height: 7px; border-radius: 50%; background: #efc416; box-shadow: 0 0 10px rgba(239, 196, 22, .8); }
 #visitor-count { color: #fff; min-width: 1ch; }
 
+#picker { position: fixed; left: 16px; bottom: 16px; max-width: calc(100vw - 278px); }
+.picker-label {
+  display: inline-block; margin-bottom: 6px; padding: 4px 8px; border-radius: 5px; background: rgba(18, 20, 24, 0.86);
+  color: #efc416; font: 800 10px/1.2 ui-sans-serif, system-ui, sans-serif; letter-spacing: .16em;
+}
+.picker-label span { margin-left: 6px; color: #8d93a0; font-weight: 600; letter-spacing: .06em; }
+#pickerList { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+#pickerList::-webkit-scrollbar { display: none; }
+#pickerList button {
+  flex: none; display: inline-flex; align-items: center; gap: 7px; padding: 10px 11px; border-radius: 9px;
+  border: 2px solid transparent; background: rgba(18, 20, 24, 0.86); color: #e8e8e8; cursor: pointer;
+  font: 700 13px/1 ui-sans-serif, system-ui, sans-serif; white-space: nowrap; backdrop-filter: blur(6px);
+}
+#pickerList button:hover { border-color: #5a606b; }
+#pickerList button[aria-checked="true"] { background: #efc416; color: #111; border-color: #fff; }
+#pickerList kbd { margin: 0; padding: 2px 5px; border-radius: 4px; background: rgba(255,255,255,.14); font-size: 10px; opacity: 1; }
+#pickerList button[aria-checked="true"] kbd { background: rgba(0,0,0,.16); }
+#pickerList .swatch { width: 9px; height: 9px; border-radius: 50%; }
+.swatch.rigid { background: #7c3aed; } .swatch.ductile { background: #0ea5e9; }
+.swatch.elastic { background: #22c55e; } .swatch.brittle { background: #f97316; }
+
 #gauge { position: fixed; right: 16px; bottom: 16px; width: 230px; height: 230px; filter: drop-shadow(0 10px 20px rgba(0,0,0,.3)); }
 #gauge svg { width: 100%; height: 100%; }
 
@@ -67,17 +88,21 @@ kbd { font-size: 9px; font-weight: 600; opacity: .6; margin-left: 4px; font-fami
 @media (max-width: 640px) {
   #panel {
     top: calc(10px + env(safe-area-inset-top)); left: 10px; right: 10px; width: auto; padding: 12px;
-    max-height: calc(100dvh - 20px - env(safe-area-inset-top)); overflow-y: auto;
+    max-height: calc(100dvh - 20px - env(safe-area-inset-top)); overflow-y: auto; z-index: 2;
   }
   #panelToggle { width: 40px; height: 40px; margin: -4px -2px 0 0; }
   .row button { padding: 13px 10px; font-size: 14px; }
   .checks label { min-height: 32px; }
-  select { font-size: 16px; padding: 10px; }
   kbd { display: none; }
-  #gauge { width: 132px; height: 132px; right: 8px; bottom: calc(8px + env(safe-area-inset-bottom)); }
-  #visitors { top: auto; right: auto; left: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); }
+  #picker { left: 0; right: 0; bottom: calc(8px + env(safe-area-inset-bottom)); max-width: none; }
+  .picker-label { margin-left: 10px; }
+  .picker-label span { display: none; }
+  #pickerList { padding: 0 10px 2px; }
+  #pickerList button { padding: 12px 14px; }
+  #gauge { width: 124px; height: 124px; right: 8px; bottom: calc(84px + env(safe-area-inset-bottom)); }
+  #visitors { top: auto; right: auto; left: 10px; bottom: calc(86px + env(safe-area-inset-bottom)); }
   #status {
-    top: auto; left: 10px; right: 150px; bottom: calc(52px + env(safe-area-inset-bottom));
+    top: auto; left: 10px; right: 140px; bottom: calc(126px + env(safe-area-inset-bottom));
     transform: none; text-align: left;
   }
   #status .head { font-size: 17px; letter-spacing: .08em; }
